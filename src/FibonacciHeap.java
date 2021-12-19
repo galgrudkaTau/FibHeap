@@ -5,7 +5,19 @@
  */
 public class FibonacciHeap
 {
+    private HeapNode min;
+    private HeapNode last; // the head of the roots list
+    private int size;
+    private int rootsNum;
 
+    public FibonacciHeap(){
+        //todo-think about constructors
+        this.size=0;
+        this.rootsNum=0;
+        this.min=null;
+        this.last=null;
+        //todo-potential is 0 when creating a new FibHeap
+    }
    /**
     * public boolean isEmpty()
     *
@@ -39,11 +51,104 @@ public class FibonacciHeap
     public void deleteMin()
     {
 
-     	return; // should be replaced by student code
-     	
+        HeapNode minHeapNode=this.min;
+
+        // changes the children of min to be roots of a tree-
+        // by that deleting the original root
+        updateRoots(this.min);
+
+        //maintaing the order of children placement in the heap and by so removing this.min
+        this.min.getChild().prev=min.parent;//todo-Check that-should i call it with this.min.getChild()...?
+        this.min.child.prev.next=this.min.next;
+        if(minHeapNode.getNext()==minHeapNode){
+            // this.min is the root of a single tree in the heap
+            this.min=null;
+            this.last=null;
+            this.rootsNum=0;
+            this.size=0;
+        }
+        else {
+            consolidation();
+        }
+        this.size=this.size-1;
+        this.rootsNum=this.rootsNum-1;
+
+
+        ///todo-find the new min
     }
 
-   /**
+    private void consolidation() {
+        // successive linking- creates a valid Binomial Heap from FibHeap
+
+        HeapNode [] rankArray=new HeapNode[this.rootsNum]; //todo-think how to get the num of roots
+        HeapNode currRoot=this.last.getNext();
+        int rankindex=0;
+
+        while (currRoot.getNext()!=null){
+            int i=0;
+            rankindex=currRoot.getRank();
+            i=rankindex;
+            // empty box
+            if (rankArray[rankindex]==null){ //there is no root with the same rank
+                rankArray[rankindex]=currRoot;
+            }
+            else { // there is a tree with the same rank as currRoot
+                // we should link them
+                HeapNode newTree;
+                if (currRoot.getKey()<rankArray[i].getKey()){
+                    //currRoot should be the root
+                    newTree= link(currRoot,rankArray[i]);
+                }
+                else{
+                    //rankArray[i] should be the root
+                    newTree= link(rankArray[i],currRoot);
+                }
+                i++;
+                while (rankArray[i]!=null){
+                    if (currRoot.getKey()<rankArray[i].getKey()){
+                        //currRoot should be the root
+                        newTree= link(currRoot,rankArray[i]);
+                    }
+                    else{
+                        //rankArray[i] should be the root
+                        newTree= link(rankArray[i],currRoot);
+                    }
+                    i++;
+                }
+                // rankArray[i]==null
+                rankArray[i]=newTree;
+            }
+        }
+        // now we should make sure the roots "list" is ordered by increasing rank
+        //so we will collect trees with higher rank first and assign it as the last
+        this.min=null;
+        this.last=rankArray[rankArray.length-1];
+        HeapNode currNext=this.last;
+        for(int j=rankArray.length-2;j>=0;j--){
+            rankArray[j].setNext(currNext);
+            currNext.setPrev(rankArray[j]);
+            currNext=rankArray[j];
+        }
+        //todo-take care of pointers last.next first.prev
+    }
+
+    private HeapNode link(HeapNode smaller, HeapNode bigger) {
+        //todo- to inplement link
+        return null;
+    }
+
+    private void updateRoots(HeapNode minHeapNode){
+        if (minHeapNode!=null){
+            HeapNode currChild=this.min.getChild();
+            while (currChild!=null){
+                currChild.setParent(null);
+                currChild.setMarked(false); // becomes a root - root is never marked
+            }
+        }
+
+    }
+
+    /**
     * public HeapNode findMin()
     *
     * Returns the node of the heap whose key is minimal, or null if the heap is empty.
@@ -175,6 +280,13 @@ public class FibonacciHeap
     public static class HeapNode{
 
     	public int key;
+        //Todo- add info? which type? String? is it necessary?
+        private int rank;
+         private boolean marked;
+        private HeapNode child;//leftmost child
+        private HeapNode next;
+        private HeapNode prev;
+        private HeapNode parent;
 
     	public HeapNode(int key) {
     		this.key = key;
@@ -183,5 +295,52 @@ public class FibonacciHeap
     	public int getKey() {
     		return this.key;
     	}
-    }
+
+       public int getRank() {
+           return rank;
+       }
+
+       public void setRank(int rank) {
+           this.rank = rank;
+       }
+       public boolean isMarked() {
+           return marked;
+       }
+
+       public void setMarked(boolean marked) {
+           this.marked = marked;
+       }
+
+       public HeapNode getChild() {
+           return child;
+       }
+
+       public void setChild(HeapNode child) {
+           this.child = child;
+       }
+
+       public HeapNode getNext() {
+           return next;
+       }
+
+       public void setNext(HeapNode next) {
+           this.next = next;
+       }
+
+       public HeapNode getPrev() {
+           return prev;
+       }
+
+       public void setPrev(HeapNode prev) {
+           this.prev = prev;
+       }
+
+       public HeapNode getParent() {
+           return parent;
+       }
+
+       public void setParent(HeapNode parent) {
+           this.parent = parent;
+       }
+   }
 }
