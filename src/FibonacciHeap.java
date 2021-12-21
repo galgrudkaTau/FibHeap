@@ -65,30 +65,36 @@ public class FibonacciHeap
 
         //maintaing the order of children placement in the heap and by so removing this.min
         this.minNode.getChild().prev= minNode.parent;//todo-Check that-should i call it with this.min.getChild()...?
-        this.minNode.child.prev.next=this.minNode.next;
+        this.minNode.child.prev.next=this.minNode.next;// todo- go ove with hila something is weird
+        this.rootsNum--; //todo-check that
         if(minHeapNode.getNext()==minHeapNode){
             // this.min is the root of a single tree in the heap
             this.minNode =null;
             this.head =null;
+            this.tail=null;
             this.rootsNum=0;
             this.size=0;
         }
         else {
+            //temporarly change the minNode pointer to another roots existing in the heap- might change after consolidation
+            this.minNode=minHeapNode.getNext();
+            // successive linking- creates a valid Binomial Heap from FibHeap
             consolidation();
         }
+        // deletion of one heapNode is done so the size need an update
         this.size=this.size-1;
-        this.rootsNum=this.rootsNum-1;
 
 
-        ///todo-find the new min
+
+        //minNode,rootsNum maintainace is done in consolidation.
     }
 
     private void consolidation() {
         // successive linking- creates a valid Binomial Heap from FibHeap
 
-        HeapNode [] rankArray=new HeapNode[this.rootsNum]; //todo-think how to get the num of roots
-        HeapNode currRoot=this.head.getNext();
-        int rankindex=0;
+        HeapNode [] rankArray = new HeapNode[this.rootsNum];
+        HeapNode currRoot = this.head.getNext();
+        int rankindex = 0;
 
         while (currRoot.getNext()!=null){
             int i=0;
@@ -128,18 +134,48 @@ public class FibonacciHeap
         // now we should make sure the roots "list" is ordered by increasing rank
         //so we will collect trees with higher rank first and assign it as the last
         this.minNode =null;
-        this.head =rankArray[rankArray.length-1];
-        HeapNode currNext=this.head;
-        for(int j=rankArray.length-2;j>=0;j--){
-            rankArray[j].setNext(currNext);
-            currNext.setPrev(rankArray[j]);
-            currNext=rankArray[j];
+        this.rootsNum=0;
+        HeapNode currNext=null; //todo- check logic
+        for(int j=rankArray.length-1;j>=0;j--){
+            if(rankArray[j]!=null){
+                if (this.minNode==null){
+                    //the heap is empty
+                    this.tail=rankArray[j];
+                    this.head =rankArray[j];
+                    this.minNode=rankArray[j];
+                    this.rootsNum=1;
+                    currNext=this.tail;
+                }
+                else{
+                    //roots list isnt empty-we should update pointers
+                    // "inserting" currTree into the list of roots.
+                    //todo-take care of pointers last.next first.prev
+                    //for each nonempty index theres a tree with its rank so rootsNum
+                    // so rootsNum should get increased by 1
+                    this.rootsNum++;
+                    rankArray[j].setNext(currNext);
+                    currNext.setPrev(rankArray[j]);
+                    this.head=rankArray[j]; // in each iteration new head is inserted
+                    currNext=rankArray[j];
+
+                    //maintain the minNode
+                    if(rankArray[j].key < this.minNode.key){
+                        this.minNode=rankArray[j];
+                    }
+                }
+            }
+
         }
-        //todo-take care of pointers last.next first.prev
+        //maintain pointers of circular list
+        this.head.setPrev(this.tail);
+        this.tail.setNext(this.head);
+
     }
 
     private HeapNode link(HeapNode smaller, HeapNode bigger) {
         //todo- to inplement link
+        //link bigger to smaller
+
         return null;
     }
 
@@ -149,6 +185,8 @@ public class FibonacciHeap
             while (currChild!=null){
                 currChild.setParent(null);
                 currChild.setMarked(false); // becomes a root - root is never marked
+                this.rootsNum++;
+                currChild=currChild.getNext();
             }
         }
 
