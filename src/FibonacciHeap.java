@@ -152,8 +152,9 @@ public class FibonacciHeap
         //so we will collect trees with higher rank first and assign it as the last
         this.minNode =null;
         this.treesCnt=0;
-        HeapNode currNext=null; //todo- check logic
-        for(int j=rankArray.length-1;j>=0;j--){
+        this.size=0;
+        this.markedNodesCnt=0;
+        for(int j=0;j<rankArray.length;j++){
             if(rankArray[j]!=null){
                 if (this.minNode==null){
                     //the heap is empty
@@ -163,28 +164,25 @@ public class FibonacciHeap
                     this.tail=firstTree;
                     this.head =firstTree;
                     this.minNode=firstTree;
-                    this.treesCnt=1;
-                    currNext=this.tail;
+                    this.size+=1;
+                    //todo-think about a method to initialze new "heap"
                 }
                 else{
                     //roots list isnt empty-we should update pointers
                     // "inserting" currTree into the list of roots.
                     //todo-take care of pointers last.next first.prev
                     //for each nonempty index theres a tree with its rank so rootsNum
-                    // so rootsNum should get increased by 1
-                    this.treesCnt+=1;
-                    rankArray[j].setNext(currNext);
-                    currNext.setPrev(rankArray[j]);
-                    this.head=rankArray[j]; // in each iteration new head is inserted
-                    currNext=rankArray[j];
-
+                    // so treesCnt should get increased by 1
+                    insertAfter(this.minNode,rankArray[j]);
+                    this.tail=rankArray[j];//tail is updated though out the loop
+                    this.size+=rankArray[j].getRank()+1;
                     //maintain the minNode
                     if(rankArray[j].key < this.minNode.key){
                         this.minNode=rankArray[j];
                     }
                 }
+                this.treesCnt+=1;//inserted new tree to heap
             }
-
         }
         //maintain pointers of circular list
         this.head.setPrev(this.tail);
@@ -192,19 +190,28 @@ public class FibonacciHeap
 
     }
 
+    private void insertAfter(HeapNode currNode, HeapNode nextNode) {
+        nextNode.setPrev(currNode);
+        nextNode.setNext(currNode.getNext());
+        currNode.setNext(nextNode);
+        nextNode.getNext().setPrev(nextNode);
+
+
+    }
+
     private HeapNode link(HeapNode smaller, HeapNode bigger) {
         //todo- check link counter
         //link bigger to smaller
         //remove heapNode from rootsList
-        removeHeapNode(bigger);
-        addHeapNodeAsFirst(smaller,bigger);
+        removeHeapNode(bigger);//todo-make a method for deleting
+        insertHeapNodeAsFirst(smaller,bigger);
         smaller.setRank(smaller.getRank()+1);
         bigger.setMarked(false);
         totalLinks++;
         return smaller;
     }
 
-    private void addHeapNodeAsFirst(HeapNode smaller, HeapNode bigger) {
+    private void insertHeapNodeAsFirst(HeapNode smaller, HeapNode bigger) {
 //        //todo-implement addHeapNodeAsFirst if necessary
 //
 //
