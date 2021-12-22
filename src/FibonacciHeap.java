@@ -78,9 +78,6 @@ public class FibonacciHeap
     {
         HeapNode minHeapNode=this.minNode;
 
-
-
-
         if(this.head==this.tail) {
             if (this.size == 1){
                 // this.min is the root of a single tree in the heap
@@ -92,7 +89,7 @@ public class FibonacciHeap
             }else {
                 // changes the children of min to be roots of a tree-
                 // by that deleting the original root
-                updateRoots(this.minNode);
+                updateRoots(this.minNode);//inside update treesCnt is increased for each new tree
                 //maintaing the order of children placement in the heap and by so removing this.min
                 this.minNode.getChild().getPrev().setNext(this.minNode.getNext()); // x_k -> y_3
                 this.minNode.getNext().setPrev(this.minNode.getChild().getPrev()); // y_3 -> x_k
@@ -119,7 +116,10 @@ public class FibonacciHeap
         // successive linking- creates a valid Binomial Heap from FibHeap
 
         HeapNode [] rankArray = new HeapNode[this.treesCnt];
-        HeapNode currRoot = this.head.getNext();
+        for (int i=0;i<rankArray.length;i++){
+            rankArray[i]=null;
+        }
+        HeapNode currRoot = this.head;
         int rankindex = 0;
 
         while (currRoot.getNext()!=null){
@@ -132,28 +132,19 @@ public class FibonacciHeap
             }
             else { // there is a tree with the same rank as currRoot
                 // we should link them
-                HeapNode newTree;
-                if (currRoot.getKey()<rankArray[i].getKey()){
-                    //currRoot should be the root
-                    newTree= link(currRoot,rankArray[i]);
-                }
-                else{
-                    //rankArray[i] should be the root
-                    newTree= link(rankArray[i],currRoot);
-                }
-                i++;
+                HeapNode newTree=null;//check
                 while (rankArray[i]!=null){
+                    HeapNode sameRankTree=rankArray[i];
                     if (currRoot.getKey()<rankArray[i].getKey()){
                         //currRoot should be the root
-                        newTree= link(currRoot,rankArray[i]);
-                    }
-                    else{
-                        //rankArray[i] should be the root
-                        newTree= link(rankArray[i],currRoot);
+                        newTree= link(currRoot,sameRankTree);
+                        rankArray[i]=null; //after linking two trees with rank i ==> currently  no tree in rank i.
+                    } else{
+                        //sameRankTree-rankArray[i] should be the root
+                        newTree= link(sameRankTree,currRoot);
                     }
                     i++;
                 }
-                // rankArray[i]==null
                 rankArray[i]=newTree;
             }
         }
@@ -166,9 +157,12 @@ public class FibonacciHeap
             if(rankArray[j]!=null){
                 if (this.minNode==null){
                     //the heap is empty
-                    this.tail=rankArray[j];
-                    this.head =rankArray[j];
-                    this.minNode=rankArray[j];
+                    HeapNode firstTree=rankArray[j];
+                    firstTree.setNext(firstTree);
+                    firstTree.setPrev(firstTree);
+                    this.tail=firstTree;
+                    this.head =firstTree;
+                    this.minNode=firstTree;
                     this.treesCnt=1;
                     currNext=this.tail;
                 }
@@ -203,15 +197,17 @@ public class FibonacciHeap
         //link bigger to smaller
         //remove heapNode from rootsList
         removeHeapNode(bigger);
-        addHeapNodeAsFirst(smaller.getChild(),bigger);
+        addHeapNodeAsFirst(smaller,bigger);
         smaller.setRank(smaller.getRank()+1);
         bigger.setMarked(false);
         totalLinks++;
         return smaller;
     }
 
-    private void addHeapNodeAsFirst(HeapNode child, HeapNode bigger) {
+    private void addHeapNodeAsFirst(HeapNode smaller, HeapNode bigger) {
 //        //todo-implement addHeapNodeAsFirst if necessary
+//
+//
 //        if (child==null){
 //            // no children for smaller
 //
@@ -474,6 +470,8 @@ public class FibonacciHeap
         int[] arr = new int[k];
         FibonacciHeap helpHeap = new FibonacciHeap();
         helpHeap.insert(H.findMin().getKey());
+    return null; //todo- change that
+
     }
 
     /**
