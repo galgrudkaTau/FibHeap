@@ -20,7 +20,6 @@ class Heap {
     }
 
 
-
     public int deleteMin() {
         int min = this.set.first();
         this.set.remove(this.set.first());
