@@ -346,8 +346,17 @@ public class FibonacciHeap
      */
     public int[] countersRep()
     {
-        int[] arr = new int[100];
-        return arr; //	 to be replaced by student code
+        if (this.isEmpty()){
+            return new int[]{};
+        }
+        int[] counterArr = new int[treesCnt];
+            HeapNode currTree=this.head;
+            counterArr[currTree.getRank()]+=1;
+            currTree=currTree.getNext();
+            while(currTree!=this.head){
+                counterArr[currTree.getRank()]+=1;
+            }
+        return counterArr; //	 to be replaced by student code
     }
 
     /**
