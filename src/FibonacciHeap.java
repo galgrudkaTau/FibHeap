@@ -85,32 +85,59 @@ public class FibonacciHeap
      *
      */
     public void deleteMin() {
-        HeapNode minHeapNode = this.minNode;
-
-        if (minHeapNode != null) {
-            updateRoots(minHeapNode);//inside update treesCnt is increased for each new tree
-            //maintaing the order of children placement in the heap and by so removing this.min
-            if (minNode.getChild() != null) {
-                minHeapNode.getChild().getPrev().setNext(minHeapNode.getNext()); // x_k -> y_3
-                minHeapNode.getNext().setPrev(minHeapNode.getChild().getPrev()); // y_3 -> x_k
-                minHeapNode.getChild().setPrev(minHeapNode.getPrev()); // x_1 -> y_1
-                minHeapNode.getPrev().setNext(minHeapNode.getChild()); // y_1 -> x_1
-            } else { //min node has no children
-                //todo-take care of that
-
+        HeapNode minHeapNode=this.minNode;
+        if (minHeapNode!= null) {
+            updateRoots(minHeapNode);
+            removeMin(minHeapNode);
+            if (minHeapNode==minHeapNode.getNext()) {
+                this.minNode = null;
             }
-
-            if (this.size == 1) {
-                // this.min is the root of a single tree in the heap
-                initializeFields();
-            } else {
-                //temporarly change the minNode pointer to another roots existing in the heap- might change after consolidation
-                this.minNode = minHeapNode.getNext();
-                // successive linking- creates a valid Binomial Heap from FibHeap
+            else {
+                this.minNode=minHeapNode.getNext();
                 consolidation();
             }
             this.size = this.size - 1;
         }
+    }
+
+    private void removeMin(HeapNode minNode) {
+        if (!this.isEmpty()) {
+            //at least one heapNode
+            if (this.size() == 1) {
+                //only minNode in heap
+               initializeFields();
+            } else { //size>1
+                if (minNode.getChild() == null) {
+                    removeHeapNode(this.minNode);
+                } else {
+                    //minNode has at least one Child
+                    if (this.minNode == this.head) {
+                        HeapNode lastChild=this.minNode.getChild().getPrev();
+                        this.head=this.minNode.getChild();
+                        lastChild.setNext(this.minNode.getNext());
+                        this.minNode.getNext().setPrev(lastChild);
+                        this.head.setPrev(this.tail);
+                        this.tail.setNext(this.head);
+
+                    } else if (this.minNode == this.tail) {
+                            HeapNode prevHN=this.minNode.getPrev();
+                            HeapNode lastChild=this.minNode.getChild().getPrev();
+                            prevHN.setNext(this.minNode.getChild());
+                            this.minNode.getChild().setPrev(prevHN);
+                            this.head.setPrev(lastChild);
+                    } else { // this min node is in between && has at least one child
+                        this.minNode.getChild().getPrev().setNext(this.minNode.getNext()); // x_k -> y_3
+                        this.minNode.getNext().setPrev(this.minNode.getChild().getPrev()); // y_3 -> x_k
+                        this.minNode.getChild().setPrev(this.minNode.getPrev()); // x_1 -> y_1
+                        this.minNode.getPrev().setNext(this.minNode.getChild()); // y_1 -> x_1
+
+                    }
+                }
+
+            }
+
+        }
+
     }
 
     private void consolidation() {
