@@ -49,12 +49,12 @@ public class Test {
             bugFound("test4");
         }
         try {
-            //test5();
+            test5();
         } catch (Exception e) {
             bugFound("test5");
         }
         try {
-            //test6();
+            test6();
         } catch (Exception e) {
             bugFound("test6");
         }
@@ -98,13 +98,13 @@ public class Test {
         } catch (Exception e) {
             bugFound("test14");
         }
+//        try {
+//            //test15();
+//        } catch (Exception e) {
+//            bugFound("test15");
+//        }
         try {
-            test15();
-        } catch (Exception e) {
-            bugFound("test15");
-        }
-        try {
-            test16();
+            //test16();
         } catch (Exception e) {
             bugFound("test16");
         }
@@ -175,7 +175,7 @@ public class Test {
             grade -= 8;
         }
         try {
-            //test30();
+            test30();
         } catch (Exception e) {
             System.out.println("Bug found in " + "test30");
             grade -= 8;
@@ -207,7 +207,7 @@ public class Test {
                 return;
             }
             fibonacciHeap.deleteMin();
-            System.out.println("currMin is"+fibonacciHeap.findMin().getKey());
+            //System.out.println("currMin is"+fibonacciHeap.findMin().getKey());
         }
     }
 
@@ -218,6 +218,9 @@ public class Test {
         addKeys(0);
         while (!heap.isEmpty()) {
             if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+                System.out.println("problem in test 1");
+                System.out.println("heap.findMin() != fibonacciHeap.findMin().getKey()"+!(heap.findMin() == fibonacciHeap.findMin().getKey()));
+                System.out.println("heap.size() != fibonacciHeap.size()"+!(heap.size() == fibonacciHeap.size()));
                 bugFound(test);
                 return;
             }
