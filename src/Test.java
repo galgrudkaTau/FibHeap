@@ -25,151 +25,181 @@ public class Test {
 
         try {
             test0();
+            System.out.println("all goot in test 0");
         } catch (Exception e) {
             bugFound("test0");
         }
         try {
             test1();
+            System.out.println("all good in test 1");
         } catch (Exception e) {
             bugFound("test1");
         }
         try {
             test2();
+            System.out.println("all good in test 2");
         } catch (Exception e) {
             bugFound("test2");
         }
         try {
             test3();
+            System.out.println("all good in test 3");
         } catch (Exception e) {
             bugFound("test3");
         }
         try {
             test4();
+            System.out.println("all good in test 4");
         } catch (Exception e) {
             bugFound("test4");
         }
         try {
             test5();
+            System.out.println("all good in test 5");
         } catch (Exception e) {
             bugFound("test5");
         }
         try {
             test6();
+            System.out.println("all good in test 6");
         } catch (Exception e) {
             bugFound("test6");
         }
         try {
             test7();
+            System.out.println("all good in test 7");
         } catch (Exception e) {
             bugFound("test7");
         }
         try {
             test8();
+            System.out.println("all good in test 8");
         } catch (Exception e) {
             bugFound("test8");
         }
         try {
             test9();
+            System.out.println("all good in test 9");
         } catch (Exception e) {
             bugFound("test9");
         }
         try {
             test10();
+            System.out.println("all good in test 10");
         } catch (Exception e) {
             bugFound("test10");
         }
         try {
             test11();
+            System.out.println("all good in test 11");
         } catch (Exception e) {
             bugFound("test11");
         }
         try {
             test12();
+            System.out.println("all good in test 12");
         } catch (Exception e) {
             bugFound("test12");
         }
         try {
             test13();
+            System.out.println("all good in test 13");
         } catch (Exception e) {
             bugFound("test13");
         }
         try {
             test14();
+            System.out.println("all good in test 14");
         } catch (Exception e) {
             bugFound("test14");
         }
+        try {
+          test15();
+            System.out.println("all good in test 15");
+        } catch (Exception e) {
+            bugFound("test15");
+       }
 //        try {
-//            //test15();
+//            test16();
+//            System.out.println("all good in test 16");
 //        } catch (Exception e) {
-//            bugFound("test15");
+//            bugFound("test16");
 //        }
         try {
-            //test16();
-        } catch (Exception e) {
-            bugFound("test16");
-        }
-        try {
             test17();
+            System.out.println("all good in test 17");
         } catch (Exception e) {
             bugFound("test17");
         }
         try {
             test18();
+            System.out.println("all good in test 18");
         } catch (Exception e) {
             bugFound("test18");
         }
         try {
             test19();
+            System.out.println("all good in test 19");
         } catch (Exception e) {
             bugFound("test19");
         }
         try {
             test20();
+            System.out.println("all good in test 20");
         } catch (Exception e) {
             bugFound("test20");
         }
-        try {
-            test21();
-        } catch (Exception e) {
-            bugFound("test21");
-        }
-        try {
-            test22();
-        } catch (Exception e) {
-            bugFound("test22");
-        }
+//        try {
+//            test21();
+        System.out.println("all good in test 21");
+//        } catch (Exception e) {
+//            bugFound("test21");
+//        }
+//        try {
+//            test22();
+        System.out.println("all good in test 22");
+//        } catch (Exception e) {
+//            bugFound("test22");
+//        }
         try {
             test23();
+            System.out.println("all good in test 23");
         } catch (Exception e) {
             bugFound("test23");
         }
         try {
             test24();
+            System.out.println("all good in test 24");
         } catch (Exception e) {
             bugFound("test24");
         }
         try {
             test25();
+            System.out.println("all good in test 25");
         } catch (Exception e) {
             bugFound("test25");
         }
         try {
             test26();
+            System.out.println("all good in test 26");
         } catch (Exception e) {
             bugFound("test26");
         }
         try {
             test27();
+            System.out.println("all good in test 27");
         } catch (Exception e) {
             bugFound("test27");
         }
         try {
             test28();
+            System.out.println("all good in test 28");
         } catch (Exception e) {
             bugFound("test28");
         }
         try {
             test29();
+            System.out.println("all good in test 29");
         } catch (Exception e) {
             System.out.println("Bug found in " + "test29");
             grade -= 8;

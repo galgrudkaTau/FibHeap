@@ -101,7 +101,7 @@ public class FibonacciHeap
             //at least one heapNode
             if (this.size() == 1) {
                 //only minNode in heap
-               initializeFields();
+                initializeFields();
             } else { //size>1
                 if (minNode.getRank() == 0) { //there is more than 0 node in the heap minNode doesn't have children
                     //no need to take care of pointers of its children
@@ -130,11 +130,11 @@ public class FibonacciHeap
 
 
                     } else if (this.minNode == this.tail) { //minNode is the tail of the root List
-                            HeapNode prevHN=this.minNode.getPrev();
-                            HeapNode lastChild=this.minNode.getChild().getPrev(); //circular list so last child is th prev to child
-                            prevHN.setNext(this.minNode.getChild());
-                            this.minNode.getChild().setPrev(prevHN);
-                            this.head.setPrev(lastChild);
+                        HeapNode prevHN=this.minNode.getPrev();
+                        HeapNode lastChild=this.minNode.getChild().getPrev(); //circular list so last child is th prev to child
+                        prevHN.setNext(this.minNode.getChild());
+                        this.minNode.getChild().setPrev(prevHN);
+                        this.head.setPrev(lastChild);
 
                     } else { // this min node is in between && has at least one child
                         this.minNode.getChild().getPrev().setNext(this.minNode.getNext()); // x_k -> y_3
@@ -166,6 +166,7 @@ public class FibonacciHeap
         int currRank=0;
         if (rankArray[currRoot.getRank()]==null){
             rankArray[currRoot.getRank()]=currRoot;
+            //removeHeapNode(currRoot);//todo-check that
 //            print(this,true);
         }
         currRoot=currRoot.getNext();
@@ -173,9 +174,13 @@ public class FibonacciHeap
         while (currRoot!=null && currRoot!=this.head){
             HeapNode xRoot=currRoot;
             currRank=xRoot.getRank();
+            HeapNode nextRoot=currRoot.getNext();
+
+            //currRoot=currRoot.getNext();
             // empty box
             if (rankArray[currRank]==null){ //there is no root with the same rank
                 rankArray[currRank]=xRoot;
+                //removeHeapNode(xRoot);//todo-check that
 //                print(this,true);
             }
             else { // there is a tree with the same rank as currRoot
@@ -186,9 +191,9 @@ public class FibonacciHeap
                     rankArray[currRank]=null; //after linking two trees with rank r ==> currently  no tree in rank r.
                     currRank++;
                 }
-                rankArray[currRank]=xRoot; // linking is done
+                rankArray[xRoot.getRank()]=xRoot; // linking is done
             }
-            currRoot=currRoot.getNext();
+            currRoot=nextRoot;
         }
 
         // now we should make sure the roots "list" is ordered by increasing rank
