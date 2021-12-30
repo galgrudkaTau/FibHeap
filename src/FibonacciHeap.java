@@ -157,30 +157,29 @@ public class FibonacciHeap
         // successive linking- creates a valid Binomial Heap from FibHeap
 
         HeapNode [] rankArray = new HeapNode[(int)(Math.log(this.size) / Math.log(2)) + 1]; // there are log_2(n) trees at most
-        for (int i=0;i<rankArray.length;i++){ //todo- its not harmful-this is should stay- check after all is good if nessecerry
-            rankArray[i]=null;
-        }
-
+//        for (int i=0;i<rankArray.length;i++){ //todo- its not harmful-this is should stay- check after all is good if nessecerry
+//            rankArray[i]=null;
+//        }
         HeapNode currRoot = this.head;
-        //currRoot.setPrev(null);
+        HeapNode nextRoot= currRoot.getNext();
+        int cntIteration=0;
         int currRank=0;
         if (rankArray[currRoot.getRank()]==null){
             rankArray[currRoot.getRank()]=currRoot;
-            //removeHeapNode(currRoot);//todo-check that
-//            print(this,true);
         }
         currRoot=currRoot.getNext();
-        //currRoot.getPrev().setNext(null);//todo-check it
-        while (currRoot!=null && currRoot!=this.head){
+        nextRoot=currRoot.getNext();
+        cntIteration++;
+
+        int treeCounterAtFirst=this.treesCnt;
+        while (currRoot!=null && currRoot!=this.head && cntIteration < treeCounterAtFirst){
             HeapNode xRoot=currRoot;
             currRank=xRoot.getRank();
-            HeapNode nextRoot=currRoot.getNext();
+            nextRoot=currRoot.getNext();
 
-            //currRoot=currRoot.getNext();
             // empty box
             if (rankArray[currRank]==null){ //there is no root with the same rank
                 rankArray[currRank]=xRoot;
-                //removeHeapNode(xRoot);//todo-check that
 //                print(this,true);
             }
             else { // there is a tree with the same rank as currRoot
@@ -194,6 +193,7 @@ public class FibonacciHeap
                 rankArray[xRoot.getRank()]=xRoot; // linking is done
             }
             currRoot=nextRoot;
+            cntIteration++;
         }
 
         // now we should make sure the roots "list" is ordered by increasing rank
@@ -214,8 +214,6 @@ public class FibonacciHeap
                     this.tail=pos;
                     this.head =pos;
                     this.minNode=pos;
-                    //this.size+=1;
-                    //todo-think about a method to initialze new "heap"
                 }
                 else{
                     //roots list isnt empty-we should update pointers
