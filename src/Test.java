@@ -119,12 +119,12 @@ public class Test {
         } catch (Exception e) {
             bugFound("test15");
        }
-//        try {
-//            test16();
-//            System.out.println("all good in test 16");
-//        } catch (Exception e) {
-//            bugFound("test16");
-//        }
+        try {
+            test16();
+            System.out.println("all good in test 16");
+        } catch (Exception e) {
+            bugFound("test16");
+        }
         try {
             test17();
             System.out.println("all good in test 17");
