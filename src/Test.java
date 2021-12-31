@@ -129,6 +129,7 @@ public class Test {
             test17();
             System.out.println("all good in test 17");
         } catch (Exception e) {
+            e.printStackTrace();
             bugFound("test17");
         }
         try {

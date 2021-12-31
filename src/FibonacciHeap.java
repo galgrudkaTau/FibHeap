@@ -421,12 +421,13 @@ public class FibonacciHeap
         if (this.isEmpty()){
             return new int[]{};
         }
-        int[] counterArr = new int[treesCnt];
+        int[] counterArr = new int[this.size];
         HeapNode currTree=this.head;
-        counterArr[currTree.getRank()]+=1;
-        currTree=currTree.getNext();
-        while(currTree!=this.head){
+        int cnt=0;
+        while(cnt<this.treesCnt){//todo-check
             counterArr[currTree.getRank()]+=1;
+            currTree=currTree.getNext();
+            cnt++;
         }
         return counterArr; //	 to be replaced by student code
     }
