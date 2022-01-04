@@ -202,6 +202,7 @@ public class Test {
             test29();
             System.out.println("all good in test 29");
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Bug found in " + "test29");
             grade -= 8;
         }
@@ -384,6 +385,64 @@ public class Test {
             bugFound(test);
     }
 
+//    static void test7() {
+//        String test = "test7";
+//        heap = new Heap();
+//        fibonacciHeap = new FibonacciHeap();
+//        //addKeys(1000);
+//            int start1=10;
+//        for (int i = 0; i < 9; i++) {//@@@@@@@ i<1000 @@@@@
+//            heap.insert(start1 + i);
+//            fibonacciHeap.insert(start1 + i);
+//        }
+//        //addKeysReverse(3000);
+//        int start2=30;
+//        for (int i = 9; i >= 0; i--) {
+//            heap.insert(start2 + i);
+//            fibonacciHeap.insert(start2 + i);
+//        }
+//
+//        ArrayList<FibonacciHeap.HeapNode> nodes = new ArrayList<>();
+//
+//        for (int i = 20; i < 30; i++) {
+//            heap.insert(i);
+//            nodes.add(fibonacciHeap.insert(i));
+//        }
+//
+//        for (int i = 20; i < 25; i++) {
+//            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+//                System.out.println("heap.findMin() != fibonacciHeap.findMin().getKey()"+!(heap.findMin() == fibonacciHeap.findMin().getKey()));
+//                System.out.println("heap.size() != fibonacciHeap.size() "+ !(heap.size() == fibonacciHeap.size()));
+//                System.out.println("i ="+i);
+//                bugFound(test);
+//                return;
+//            }
+//            heap.delete(i);
+//            try{fibonacciHeap.delete(nodes.get(i - 20));}
+//            catch (Exception e){
+//                System.out.println("i"+i);
+//                e.printStackTrace();
+//            }
+//        }
+//        int j=0;
+//        while (!heap.isEmpty()) {
+//            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+//                System.out.println("heap.findMin() != fibonacciHeap.findMin().getKey()"+!(heap.findMin() == fibonacciHeap.findMin().getKey()));
+//                System.out.println("heap.size() != fibonacciHeap.size() "+ !(heap.size() == fibonacciHeap.size()));
+//                System.out.println("j= "+j);
+//                bugFound(test);
+//                return;
+//            }
+//            heap.deleteMin();
+//            try{fibonacciHeap.deleteMin();}
+//            catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//        if (!fibonacciHeap.isEmpty()){
+//            System.out.println("!fibonacciHeap.isEmpty() "+!fibonacciHeap.isEmpty());
+//            bugFound(test);}
+//    }
     static void test7() {
         String test = "test7";
         heap = new Heap();
@@ -402,30 +461,31 @@ public class Test {
             if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
                 System.out.println("heap.findMin() != fibonacciHeap.findMin().getKey()"+!(heap.findMin() == fibonacciHeap.findMin().getKey()));
                 System.out.println("heap.size() != fibonacciHeap.size() "+ !(heap.size() == fibonacciHeap.size()));
-                System.out.println("i ="+i);
                 bugFound(test);
                 return;
             }
             heap.delete(i);
             try{fibonacciHeap.delete(nodes.get(i - 2000));}
             catch (Exception e){
-                System.out.println("i"+i);
+                System.out.println("error in trying to delete nose with key i-2000, when i= "+i+"i-2000 ="+(i-2000 ));
                 e.printStackTrace();
             }
         }
-        int j=0;
+        int i=1;
         while (!heap.isEmpty()) {
+
             if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
                 System.out.println("heap.findMin() != fibonacciHeap.findMin().getKey()"+!(heap.findMin() == fibonacciHeap.findMin().getKey()));
                 System.out.println("heap.size() != fibonacciHeap.size() "+ !(heap.size() == fibonacciHeap.size()));
-                System.out.println("j= "+j);
                 bugFound(test);
                 return;
             }
             heap.deleteMin();
-            try{fibonacciHeap.deleteMin();}
+            try{fibonacciHeap.deleteMin();
+            i++;}
             catch (Exception e){
                 e.printStackTrace();
+                System.out.println("heapSize shoud be "+ heap.size()+ " curr i = "+i);
             }
         }
         if (!fibonacciHeap.isEmpty())
