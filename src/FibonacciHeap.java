@@ -116,7 +116,7 @@ public class FibonacciHeap
                 } else { //size>1
                     if (minNode.getRank() == 0) { //there is more than 0 node in the heap minNode doesn't have children
                         //no need to take care of pointers of its children
-                        removeHeapNode(this.minNode);
+                        removeHeapNode(this.minNode); // treeCnt is updated inside the method
                         //print(this,true);
                     } else {
                         //minNode has at least one Child
@@ -169,6 +169,8 @@ public class FibonacciHeap
 //            rankArray[i]=null;
 //        }
         HeapNode currRoot = this.head;
+        currRoot.setParent(null);
+        currRoot.setMarked(false);
         HeapNode nextRoot= currRoot.getNext();
         int cntIteration=0;
         int currRank=0;
@@ -176,11 +178,14 @@ public class FibonacciHeap
             rankArray[currRoot.getRank()]=currRoot;
         }
         currRoot=currRoot.getNext();
+
         nextRoot=currRoot.getNext();
         cntIteration++;
 
         int treeCounterAtFirst=this.treesCnt;
         while (currRoot!=null && currRoot!=this.head && cntIteration < treeCounterAtFirst){
+            currRoot.setParent(null);
+            currRoot.setMarked(false);
             HeapNode xRoot=currRoot;
             currRank=xRoot.getRank();
             nextRoot=currRoot.getNext();
