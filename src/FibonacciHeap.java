@@ -85,13 +85,24 @@ public class FibonacciHeap
      *
      */
     public void deleteMin() {
-        HeapNode minHeapNode=this.minNode;
-        if (this.minNode!= null) {
-            updateRoots();
-            removeMin(this.minNode); //size is updated in remove min
-            if (this.size()>0){ // if after removeHeap the heap still has nodes then consolidation is needed.
-                //print(this,true);
-                consolidation();
+//        if (!this.isEmpty()){
+//            removeMin(this.minNode); //size is updated in remove min
+//            if (this.minNode!= null) {
+//                updateRoots();
+//                if (this.size()>0){ // if after removeHeap the heap still has nodes then consolidation is needed.
+//                    //print(this,true);
+//                    consolidation();
+//                }
+//            }
+//        }
+        if (!this.isEmpty()){
+            if (this.minNode!= null) {
+                updateRoots();
+                removeMin(this.minNode); //size is updated in remove min
+                if (this.size()>0){ // if after removeHeap the heap still has nodes then consolidation is needed.
+                    //print(this,true);
+                    consolidation();
+                }
             }
         }
     }
@@ -100,6 +111,7 @@ public class FibonacciHeap
         if (minNode!=null) {
             HeapNode pointerToPrevOfMin=this.minNode.getPrev();
             HeapNode pointerToNextOfMin=this.minNode.getNext();
+            HeapNode pointerToChildMinNode = this.minNode.getChild();
             //if (!this.isEmpty()) {
                 //at least one heapNode
                 if (this.treesCnt == 1) {
@@ -145,10 +157,12 @@ public class FibonacciHeap
                             this.head.setPrev(lastChild);
 
                         } else { // this min node is in between && has at least one child
-                            this.minNode.getChild().getPrev().setNext(this.minNode.getNext()); // x_k -> y_3
-                            this.minNode.getNext().setPrev(this.minNode.getChild().getPrev()); // y_3 -> x_k
-                            this.minNode.getChild().setPrev(this.minNode.getPrev()); // x_1 -> y_1
-                            this.minNode.getPrev().setNext(this.minNode.getChild()); // y_1 -> x_1
+                            pointerToChildMinNode.setPrev(pointerToPrevOfMin); // x_1 -> y_1
+                            pointerToPrevOfMin.setNext(pointerToChildMinNode); // y_1 -> x_1
+                            pointerToChildMinNode.getPrev().setNext(pointerToNextOfMin); // x_k -> y_3
+                            pointerToNextOfMin.setPrev(pointerToChildMinNode.getPrev()); // y_3 -> x_k
+
+
 
 
                         }
