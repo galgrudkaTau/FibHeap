@@ -97,7 +97,7 @@ public class FibonacciHeap
 //        }
         if (!this.isEmpty()){
             if (this.minNode!= null) {
-                updateRoots();
+                //updateRoots();
                 removeMin(this.minNode); //size is updated in remove min
                 if (this.size()>0){ // if after removeHeap the heap still has nodes then consolidation is needed.
                     //print(this,true);
@@ -123,30 +123,48 @@ public class FibonacciHeap
                         this.head=this.minNode.getChild();
                         this.tail=this.minNode.getChild().getPrev();
                         //todo-check if treeCnd update is needed
+                        updateRoots();
+                        this.size--;
                     }
 
                 } else { //size>1
-                    if (minNode.getRank() == 0) { //there is more than 0 node in the heap minNode doesn't have children
+                    if (minNode.getRank() == 0) {
+                        //case 2
+                        //there is more than 0 node in the heap minNode doesn't have children
                         //no need to take care of pointers of its children
-                        removeHeapNode(this.minNode); // treeCnt is updated inside the method
+                        //removeHeapNode(this.minNode); // treeCnt is updated inside the method
+                        if (this.minNode==this.head){
+                            //bigger is the head of rootsList
+                            this.head=this.head.getNext();
+                            //print(this,true);
+                        }
+                        if (this.minNode==this.tail){
+                            this.tail=this.minNode.getPrev();
+                        }
+                        this.minNode.getPrev().setNext(this.minNode.getNext());
+                        this.minNode.getNext().setPrev(this.minNode.getPrev());
+                        this.treesCnt--;
+
                         //print(this,true);
-                    } else {
+                    } else { //case 3
                         //minNode has at least one Child
                         if (this.minNode == this.head) { //minNode is the head of the root List
                             HeapNode lastChild = this.minNode.getChild().getPrev(); //todo- what happen when only one child?
-                            if (minNode.getNext() == minNode) { // min node is the only tree in the heap
-                                this.head = this.minNode.getChild();
-                                lastChild.setNext(this.head);
-                                this.head.setPrev(lastChild);
-                                this.tail.setNext(this.head);
-                            } else {
+//                            if (minNode.getNext() == minNode) { // min node is the only tree in the heap
+//                                this.head = this.minNode.getChild();
+//                                lastChild.setNext(this.head);
+//                                this.head.setPrev(lastChild);
+//                                this.tail.setNext(this.head);
+                            //}
+                        //else {
                                 //circular list so last child is th prev to child
                                 this.head = this.minNode.getChild();
                                 lastChild.setNext(this.minNode.getNext());
                                 this.minNode.getNext().setPrev(lastChild);
                                 this.head.setPrev(this.tail);
                                 this.tail.setNext(this.head);
-                            }
+                                updateRoots();
+                            //}
 
 
                         } else if (this.minNode == this.tail) { //minNode is the tail of the root List
@@ -155,15 +173,15 @@ public class FibonacciHeap
                             prevHN.setNext(this.minNode.getChild());
                             this.minNode.getChild().setPrev(prevHN);
                             this.head.setPrev(lastChild);
+                            this.tail=lastChild;
+                            updateRoots();
 
                         } else { // this min node is in between && has at least one child
-                            pointerToChildMinNode.setPrev(pointerToPrevOfMin); // x_1 -> y_1
-                            pointerToPrevOfMin.setNext(pointerToChildMinNode); // y_1 -> x_1
                             pointerToChildMinNode.getPrev().setNext(pointerToNextOfMin); // x_k -> y_3
                             pointerToNextOfMin.setPrev(pointerToChildMinNode.getPrev()); // y_3 -> x_k
-
-
-
+                            pointerToChildMinNode.setPrev(pointerToPrevOfMin); // x_1 -> y_1
+                            pointerToPrevOfMin.setNext(pointerToChildMinNode); // y_1 -> x_1
+                            updateRoots();
 
                         }
 
@@ -362,13 +380,32 @@ public class FibonacciHeap
             if (this.minNode.getRank() > 0){
                 HeapNode currChild=this.minNode.getChild();
                 HeapNode lastChild=currChild.getPrev();
-                currChild.getPrev().setNext(null);//cancel the circularity in children list//todo-check that
-                while (currChild!=null){
-                    currChild.setParent(null);
-                    currChild.setMarked(false); // becomes a root - root is never marked
-                    this.treesCnt+=1;
-                    currChild=currChild.getNext();
+                //currChild.getPrev().setNext(null);//cancel the circularity in children list//todo-check that
+                currChild.setParent(null);
+                this.treesCnt++;
+                if(currChild.isMarked()){
+                    currChild.setMarked(false);
+                    this.markedNodesCnt--;
                 }
+                for (int i=2; i<=this.minNode.getRank();i++){
+                    currChild.setParent(null);
+                    this.treesCnt++;
+                    if(currChild.isMarked()){
+                        currChild.setMarked(false);
+                        this.markedNodesCnt--;
+                    }
+                }
+                //todo- check id treeCnt-- is needed
+                this.treesCnt--;
+
+//                while (currChild!=null){
+//                    currChild.setParent(null);
+//                    currChild.setMarked(false); // becomes a root - root is never marked
+//                    this.treesCnt+=1;
+//                    this.markedNodesCnt--;
+//                    currChild=currChild.getNext();
+//                }
+                //lastChild.setNext(this.minNode.getChild());
             }
 
         }

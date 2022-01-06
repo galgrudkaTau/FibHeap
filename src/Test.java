@@ -208,6 +208,7 @@ public class Test {
         }
         try {
             test30();
+            System.out.println("all good in test 30 " );
         } catch (Exception e) {
             System.out.println("Bug found in " + "test30");
             grade -= 8;
@@ -488,9 +489,10 @@ public class Test {
                 System.out.println("heapSize shoud be "+ heap.size()+ " curr i = "+i);
             }
         }
-        if (!fibonacciHeap.isEmpty())
-            System.out.println("!fibonacciHeap.isEmpty() "+!fibonacciHeap.isEmpty());
-        bugFound(test);
+        if (!fibonacciHeap.isEmpty()) {
+            System.out.println("!fibonacciHeap.isEmpty() " + !fibonacciHeap.isEmpty());
+            bugFound(test);
+        }
     }
 
     static void test8() {
