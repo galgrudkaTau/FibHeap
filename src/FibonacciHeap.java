@@ -1,10 +1,6 @@
-//todo-delete import- added to make heapPrint work
-import java.io.PrintStream;
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
+
 
 /**
  * FibonacciHeap
@@ -21,93 +17,16 @@ public class FibonacciHeap
     public static int totalLinks = 0;
     public int markedNodesCnt = 0;
     public int treesCnt = 0;
-    //todo-delete stream- added to make heapPrint work
-    static final PrintStream stream = System.out;
 
-    public static void main(String[] args) {
-        //Question 1
-        long start = System.currentTimeMillis();
-//        System.out.println(start);
-        FibonacciHeap heap = new FibonacciHeap();
-        int m = (int) Math.pow(2,25);
-        HeapNode[] nodesPointers = new HeapNode[m+1];
-        for (int k = m - 1; k >= -1; k--) {
-            heap.insert(k);
-            nodesPointers[k+1] = heap.head;
-        }
-//
-//        print(heap, true);
-//        System.out.println("after insert");
-
-        heap.deleteMin();
-
-//        System.out.println("after delete min");
-//        print(heap, true);
-        for (int j = (int) (Math.log(m)/Math.log(2)); j >= 1; j--) {
-//            int i = (int) (Math.log(j)/Math.log(2));
-            int index = (int) (m - Math.pow(2,j)+1);
-                heap.decreaseKey(nodesPointers[index + 1], m + 1);
-        }
-
-//        System.out.println("after delete min");
-//        print(heap, true);
-        long finish = System.currentTimeMillis();
-        long timeElapsed = finish - start;
-        System.out.println("Run-Time = " + timeElapsed);
-        System.out.println(" Potential = " + heap.potential());
-        System.out.println(" totalLinks = " + heap.totalLinks());
-        System.out.println(" totalCuts = " + heap.totalCuts());
-
-////        Question 2
-//////        System.out.println(start);
-//        for (int i = 6 ; i <= 14 ; i = i + 2){
-//            FibonacciHeap heap = new FibonacciHeap();
-//            long start = System.currentTimeMillis();
-//            int m = (int) (Math.pow(3,i)-1);
-//            for (int k=0; k<=m; k++){
-//                heap.insert(k);
-//            }
-//            for (int j = 1 ; j<= 3*m/4 ; j++){
-//                heap.deleteMin();
-//            }
-//            long finish = System.currentTimeMillis();
-//            long timeElapsed = finish - start;
-//            System.out.println("i = "+i);
-//            System.out.println("Run-Time = " + timeElapsed);
-//            System.out.println(" Potential = " + heap.potential());
-//            System.out.println(" totalLinks = " + heap.totalLinks());
-//            System.out.println(" totalCuts = " + heap.totalCuts());
-//        }
-
-//        FibonacciHeap heap = new FibonacciHeap();
-//        long start = System.currentTimeMillis();
-//        int m = 1000;
-//        for (int k=m; k>=0; k--){
-//            heap.insert(k);
-//        }
-//        for (int j = 1 ; j<= 3*m/4 ; j++){
-//            heap.deleteMin();
-//        }
-//        long finish = System.currentTimeMillis();
-//        long timeElapsed = finish - start;
-//        System.out.println("m = "+m);
-//        System.out.println("Run-Time = " + timeElapsed);
-//        System.out.println(" Potential = " + heap.potential());
-//        System.out.println(" totalLinks = " + heap.totalLinks());
-//        System.out.println(" totalCuts = " + heap.totalCuts());
-
-
-    }
 
     public FibonacciHeap(){
-        // todo-think about constructors
         this.size=0;
         this.minNode =null;
         this.head =null;
         this.tail =null;
-        // todo-potential is 0 when creating a new FibHeap
-//        markedNodesCnt = 0 and treesCnt = 0, that's what defines the potential so it's 0
     }
+
+
     /**
      * public boolean isEmpty()
      *
@@ -132,7 +51,6 @@ public class FibonacciHeap
         HeapNode nodeToInsert;
         if (isEmpty()){
             nodeToInsert = new HeapNode(key); // create a B_0 tree with key
-            // TODO: 21/12/2021 check if needs to make a method
             nodeToInsert.setNext(nodeToInsert);
             nodeToInsert.setPrev(nodeToInsert);
             this.head = nodeToInsert;
@@ -140,7 +58,6 @@ public class FibonacciHeap
             this.minNode = nodeToInsert;
         }else{
             nodeToInsert = new HeapNode(key, this.tail, this.head);
-//            update prev and next of current head and tail
             this.head.setPrev(nodeToInsert);
             this.tail.setNext(nodeToInsert);
             this.head = nodeToInsert; // create a B_0 tree, parent is null, no child and next is head and prev is tail
@@ -160,22 +77,10 @@ public class FibonacciHeap
      *
      */
     public void deleteMin() {
-//        if (!this.isEmpty()){
-//            removeMin(this.minNode); //size is updated in remove min
-//            if (this.minNode!= null) {
-//                updateRoots();
-//                if (this.size()>0){ // if after removeHeap the heap still has nodes then consolidation is needed.
-//                    //print(this,true);
-//                    consolidation();
-//                }
-//            }
-//        }
         if (!this.isEmpty()){
             if (this.minNode!= null) {
-                //updateRoots();
                 removeMin(this.minNode); //size is updated in remove min
                 if (this.size()>0){ // if after removeHeap the heap still has nodes then consolidation is needed.
-                    //print(this,true);
                     consolidation();
                 }
             }
@@ -187,84 +92,65 @@ public class FibonacciHeap
             HeapNode pointerToPrevOfMin=this.minNode.getPrev();
             HeapNode pointerToNextOfMin=this.minNode.getNext();
             HeapNode pointerToChildMinNode = this.minNode.getChild();
-            //if (!this.isEmpty()) {
-                //at least one heapNode
-                if (this.treesCnt == 1) {
-                    //only minNode in heap
-                    if (this.size()==1){
-                        initializeFields();
-                    }
-                    else {
-                        this.head=this.minNode.getChild();
-                        this.tail=this.minNode.getChild().getPrev();
-                        //todo-check if treeCnd update is needed
-                        updateRoots();
-                        this.size--;
-                    }
-
-                } else { //size>1
-                    if (minNode.getRank() == 0) {
-                        //case 2
-                        //there is more than 0 node in the heap minNode doesn't have children
-                        //no need to take care of pointers of its children
-                        //removeHeapNode(this.minNode); // treeCnt is updated inside the method
-                        if (this.minNode==this.head){
-                            //bigger is the head of rootsList
-                            this.head=this.head.getNext();
-                            //print(this,true);
-                        }
-                        if (this.minNode==this.tail){
-                            this.tail=this.minNode.getPrev();
-                        }
-                        this.minNode.getPrev().setNext(this.minNode.getNext());
-                        this.minNode.getNext().setPrev(this.minNode.getPrev());
-                        this.treesCnt--;
-
-                        //print(this,true);
-                    } else { //case 3
-                        //minNode has at least one Child
-                        if (this.minNode == this.head) { //minNode is the head of the root List
-                            HeapNode lastChild = this.minNode.getChild().getPrev(); //todo- what happen when only one child?
-//                            if (minNode.getNext() == minNode) { // min node is the only tree in the heap
-//                                this.head = this.minNode.getChild();
-//                                lastChild.setNext(this.head);
-//                                this.head.setPrev(lastChild);
-//                                this.tail.setNext(this.head);
-                            //}
-                        //else {
-                                //circular list so last child is th prev to child
-                                this.head = this.minNode.getChild();
-                                lastChild.setNext(this.minNode.getNext());
-                                this.minNode.getNext().setPrev(lastChild);
-                                this.head.setPrev(this.tail);
-                                this.tail.setNext(this.head);
-                                updateRoots();
-                            //}
-
-
-                        } else if (this.minNode == this.tail) { //minNode is the tail of the root List
-                            HeapNode prevHN = this.minNode.getPrev();
-                            HeapNode lastChild = this.minNode.getChild().getPrev(); //circular list so last child is th prev to child
-                            prevHN.setNext(this.minNode.getChild());
-                            this.minNode.getChild().setPrev(prevHN);
-                            this.head.setPrev(lastChild);
-                            this.tail=lastChild;
-                            updateRoots();
-
-                        } else { // this min node is in between && has at least one child
-                            pointerToChildMinNode.getPrev().setNext(pointerToNextOfMin); // x_k -> y_3
-                            pointerToNextOfMin.setPrev(pointerToChildMinNode.getPrev()); // y_3 -> x_k
-                            pointerToChildMinNode.setPrev(pointerToPrevOfMin); // x_1 -> y_1
-                            pointerToPrevOfMin.setNext(pointerToChildMinNode); // y_1 -> x_1
-                            updateRoots();
-
-                        }
-
-                    }
+            //at least one heapNode
+            if (this.treesCnt == 1) {
+                //only minNode in heap
+                if (this.size()==1){
+                    initializeFields();
+                }
+                else {
+                    this.head=this.minNode.getChild();
+                    this.tail=this.minNode.getChild().getPrev();
+                    updateRoots();
                     this.size--;
                 }
 
-            //}
+            } else { //size>1
+                if (minNode.getRank() == 0) {
+                    //there is more than 0 node in the heap minNode doesn't have children
+                    //no need to take care of pointers of its children
+                    //removeHeapNode(this.minNode); // treeCnt is updated inside the method
+                    if (this.minNode==this.head){
+                        //bigger is the head of rootsList
+                        this.head=this.head.getNext();
+                    }
+                    if (this.minNode==this.tail){
+                        this.tail=this.minNode.getPrev();
+                    }
+                    this.minNode.getPrev().setNext(this.minNode.getNext());
+                    this.minNode.getNext().setPrev(this.minNode.getPrev());
+                    this.treesCnt--;
+                } else {
+                    //minNode has at least one Child
+                    if (this.minNode == this.head) { //minNode is the head of the root List
+                        HeapNode lastChild = this.minNode.getChild().getPrev();
+                        //circular list so last child is th prev to child
+                        this.head = this.minNode.getChild();
+                        lastChild.setNext(this.minNode.getNext());
+                        this.minNode.getNext().setPrev(lastChild);
+                        this.head.setPrev(this.tail);
+                        this.tail.setNext(this.head);
+                        updateRoots();
+                    } else if (this.minNode == this.tail) { //minNode is the tail of the root List
+                        HeapNode prevHN = this.minNode.getPrev();
+                        HeapNode lastChild = this.minNode.getChild().getPrev(); //circular list so last child is th prev to child
+                        prevHN.setNext(this.minNode.getChild());
+                        this.minNode.getChild().setPrev(prevHN);
+                        this.head.setPrev(lastChild);
+                        this.tail=lastChild;
+                        updateRoots();
+
+                    } else { // this min node is in between && has at least one child
+                        pointerToChildMinNode.getPrev().setNext(pointerToNextOfMin); // x_k -> y_3
+                        pointerToNextOfMin.setPrev(pointerToChildMinNode.getPrev()); // y_3 -> x_k
+                        pointerToChildMinNode.setPrev(pointerToPrevOfMin); // x_1 -> y_1
+                        pointerToPrevOfMin.setNext(pointerToChildMinNode); // y_1 -> x_1
+                        updateRoots();
+                    }
+                }
+                this.size--;
+            }
+
         }
     }
 
@@ -272,9 +158,6 @@ public class FibonacciHeap
         // successive linking- creates a valid Binomial Heap from FibHeap
 
         HeapNode [] rankArray = new HeapNode[(int)(Math.log(this.size) / Math.log(2)) + 1]; // there are log_2(n) trees at most
-//        for (int i=0;i<rankArray.length;i++){ //todo- its not harmful-this is should stay- check after all is good if nessecerry
-//            rankArray[i]=null;
-//        }
         HeapNode currRoot = this.head;
         currRoot.setParent(null);
         currRoot.setMarked(false);
@@ -300,7 +183,6 @@ public class FibonacciHeap
             // empty box
             if (rankArray[currRank]==null){ //there is no root with the same rank
                 rankArray[currRank]=xRoot;
-//                print(this,true);
             }
             else { // there is a tree with the same rank as currRoot
                 // we should link them
@@ -319,16 +201,14 @@ public class FibonacciHeap
         // now we should make sure the roots "list" is ordered by increasing rank
         //so we will collect trees with lower rank first and insert after them
 
-        //initializeFields();//including minNode=null;//todo-check if necessary
         this.minNode=null;
-        this.treesCnt=0;//check that
+        this.treesCnt=0;
         HeapNode pos=null; //pointer to currTree
         for(int j=0;j<rankArray.length;j++){
             if(rankArray[j]!=null){
                 if (this.minNode==null){
                     //the heap is empty
                     pos=rankArray[j];
-                    //HeapNode firstTree=rankArray[j];
                     pos.setNext(pos);
                     pos.setPrev(pos);
                     this.tail=pos;
@@ -346,13 +226,10 @@ public class FibonacciHeap
                     this.tail=rankArray[j];//tail is updated though out the loop
                     //this.size+=rankArray[j].getRank()+1;
                     //maintain the minNode
-                    if(rankArray[j].getKey() < this.minNode.getKey()&& rankArray[j].getKey()< pos.getKey()){
-                        this.minNode=rankArray[j];
-                        pos=rankArray[j];
+                    if(rankArray[j].getKey() < this.minNode.getKey() && rankArray[j].getKey()< pos.getKey()) {
+                        this.minNode = rankArray[j];
                     }
-                    else {
                         pos=pos.getNext();
-                    }
                 }
                 this.treesCnt+=1;//inserted new tree to heap
             }
@@ -431,7 +308,6 @@ public class FibonacciHeap
             this.head=this.head.getNext();
             this.tail.setNext(this.head);
             this.head.setPrev(this.tail);
-            //print(this,true);
         }
         else{
             //bigger is not the head
@@ -443,7 +319,6 @@ public class FibonacciHeap
             if (bigger==this.tail){
                 //bigger is the last tree in rootsList
                 this.tail=prevHN;
-//                print(this,true);
             }
         }
         this.treesCnt-=1;
@@ -454,8 +329,6 @@ public class FibonacciHeap
         if (this.minNode!=null){
             if (this.minNode.getRank() > 0){
                 HeapNode currChild=this.minNode.getChild();
-                HeapNode lastChild=currChild.getPrev();
-                //currChild.getPrev().setNext(null);//cancel the circularity in children list//todo-check that
                 currChild.setParent(null);
                 this.treesCnt++;
                 if(currChild.isMarked()){
@@ -470,17 +343,8 @@ public class FibonacciHeap
                         this.markedNodesCnt--;
                     }
                 }
-                //todo- check id treeCnt-- is needed
                 this.treesCnt--;
 
-//                while (currChild!=null){
-//                    currChild.setParent(null);
-//                    currChild.setMarked(false); // becomes a root - root is never marked
-//                    this.treesCnt+=1;
-//                    this.markedNodesCnt--;
-//                    currChild=currChild.getNext();
-//                }
-                //lastChild.setNext(this.minNode.getChild());
             }
 
         }
@@ -516,7 +380,6 @@ public class FibonacciHeap
             this.head.setPrev(this.tail);
             this.tail.setNext(this.head);
             //number of trees doesnt change-potential doesnt change
-
         }
         if(!this.isEmpty()&& !heap2.isEmpty()){
             //if !this.isEmpty()&& heap2.isEmpty() - nothing to do
@@ -569,7 +432,7 @@ public class FibonacciHeap
             currTree=currTree.getNext();
             cnt++;
         }
-        return counterArr; //	 to be replaced by student code
+        return counterArr;
     }
 
     /**
@@ -582,7 +445,6 @@ public class FibonacciHeap
     public void delete(HeapNode x)
     {
         // decrease-key to infinity
-        // TODO: 21/12/2021 can we insert a negative key?
         x.setKey(Integer.MIN_VALUE);
         this.decreaseKey(x, 0);
         this.deleteMin();
@@ -680,7 +542,7 @@ public class FibonacciHeap
      */
     public int potential()
     {
-        return treesCnt+2*markedNodesCnt; // should be replaced by student code
+        return treesCnt+2*markedNodesCnt;
     }
 
     /**
@@ -749,128 +611,6 @@ public class FibonacciHeap
         return arr;
     }
 
-
-    public HeapNode getFirst() {
-        return this.head;
-    }
-    //todo-heapPrint method
-    static void printIndentPrefix(ArrayList<Boolean> hasNexts) {
-        int size = hasNexts.size();
-        for (int i = 0; i < size - 1; ++i) {
-            stream.format("%c   ", hasNexts.get(i).booleanValue() ? '│' : ' ');
-        }
-    }
-
-    static void printIndent(FibonacciHeap.HeapNode heapNode, ArrayList<Boolean> hasNexts) {
-        int size = hasNexts.size();
-        printIndentPrefix(hasNexts);
-
-        stream.format("%c── %s\n",
-                hasNexts.get(size - 1) ? '├' : '╰',
-                heapNode == null ? "(null)" : String.valueOf(heapNode.getKey())
-        );
-    }
-
-    static String repeatString(String s,int count){
-        StringBuilder r = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            r.append(s);
-        }
-        return r.toString();
-    }
-
-    static void printIndentVerbose(FibonacciHeap.HeapNode heapNode, ArrayList<Boolean> hasNexts) {
-        int size = hasNexts.size();
-        if (heapNode == null) {
-            printIndentPrefix(hasNexts);
-            stream.format("%c── %s\n", hasNexts.get(size - 1) ? '├' : '╰', "(null)");
-            return;
-        }
-
-        Function<Supplier<FibonacciHeap.HeapNode>, String> keyify = (f) -> {
-            FibonacciHeap.HeapNode node = f.get();
-            return node == null ? "(null)" : String.valueOf(node.getKey());
-        };
-        String title  = String.format(" Key: %d ", heapNode.getKey());
-        List<String> content =  Arrays.asList(
-                String.format(" Rank: %d ", heapNode.getRank()),
-                String.format(" Marked: %b ", heapNode.isMarked()),
-                String.format(" Parent: %s ", keyify.apply(heapNode::getParent)),
-                String.format(" Next: %s ", keyify.apply(heapNode::getNext)),
-                String.format(" Prev: %s ", keyify.apply(heapNode::getPrev)),
-                String.format(" Child: %s", keyify.apply(heapNode::getChild))
-        );
-
-        /* Print details in box */
-        int length = Math.max(
-                title.length(),
-                content.stream().map(String::length).max(Integer::compareTo).get()
-        );
-        String line = repeatString("─", length);
-        String padded = String.format("%%-%ds", length);
-        boolean hasNext = hasNexts.get(size - 1);
-
-        //print header row
-        printIndentPrefix(hasNexts);
-        stream.format("%c── ╭%s╮%n", hasNext ? '├' : '╰', line);
-
-        //print title row
-        printIndentPrefix(hasNexts);
-        stream.format("%c   │" + padded + "│%n", hasNext ? '│' : ' ', title);
-
-        // print separator
-        printIndentPrefix(hasNexts);
-        stream.format("%c   ├%s┤%n", hasNext ? '│' : ' ', line);
-
-        // print content
-        for (String data : content) {
-            printIndentPrefix(hasNexts);
-            stream.format("%c   │" + padded + "│%n", hasNext ? '│' : ' ', data);
-        }
-
-        // print footer
-        printIndentPrefix(hasNexts);
-        stream.format("%c   ╰%s╯%n", hasNext ? '│' : ' ', line);
-    }
-
-    static void printHeapNode(FibonacciHeap.HeapNode heapNode, FibonacciHeap.HeapNode until, ArrayList<Boolean> hasNexts, boolean verbose) {
-        if (heapNode == null || heapNode == until) {
-            return;
-        }
-        hasNexts.set(
-                hasNexts.size() - 1,
-                heapNode.getNext() != null && heapNode.getNext() != heapNode && heapNode.getNext() != until
-        );
-        if (verbose) {
-            printIndentVerbose(heapNode, hasNexts);
-        } else {
-            printIndent(heapNode, hasNexts);
-        }
-
-        hasNexts.add(false);
-        printHeapNode(heapNode.getChild(), null, hasNexts, verbose);
-        hasNexts.remove(hasNexts.size() - 1);
-
-        until = until == null ? heapNode : until;
-        printHeapNode(heapNode.getNext(), until, hasNexts, verbose);
-    }
-
-    public static void print(FibonacciHeap heap, boolean verbose) {
-        if (heap == null) {
-            stream.println("(null)");
-            return;
-        } else if (heap.isEmpty()) {
-            stream.println("(empty)");
-            return;
-        }
-
-        stream.println("╮");
-        ArrayList<Boolean> list = new ArrayList<>();
-        list.add(false);
-        printHeapNode(heap.getFirst(), null, list, verbose);
-    }
-    //todo-heapPrint ends here-delete afterwards.
-
     /**
      * public class HeapNode
      *
@@ -881,7 +621,6 @@ public class FibonacciHeap
     public static class HeapNode{
 
         public int key;
-        //Todo- add info? which type? String? is it necessary?
         private int rank;
         private boolean marked;
         private HeapNode child;//leftmost child
